@@ -1,0 +1,68 @@
+-- -- Criando database
+
+-- --CREATE database aula05
+
+-- CREATE TABLE IF NOT EXISTS PRODUTO(
+-- ID INT primary key,
+-- COD VARCHAR(4) NOT NULL UNIQUE,
+-- NOME VARCHAR(100),
+-- PRECO REAL CHECK (PRECO>0));
+ 
+-- --\dt; (Descrição de tabelas)
+
+-- \d PRODUTO -- \d (descrição de uma tabela específica)
+
+-- -- DELETANDO UMA BASE DE DADOS
+-- --DROP DATABASE aula05;
+-- -- Deletando uma tabela
+-- DROP TABLE PRODUTO;UNIQUE
+
+
+
+
+
+
+-- CREATE TABLE IF NOT EXISTS PROFESSOR(
+-- ID int primary key,
+-- NOME varchar(120) not null,
+-- CPF varchar(11) not NULL UNIQUE
+-- );
+
+-- CREATE TABLE IF NOT EXISTS TURMA(
+-- id INT ,
+-- numero_turma INT UNIQUE,
+-- duracao_dias varchar(4),
+-- id_professor int, 
+-- primary key (id, numero_turma),
+-- Constraint fk_prof foreign key (id_professor) references PROFESSOR(id)
+-- );
+
+-- \dt;
+-- \d TURMA
+
+CREATE TABLE IF NOT EXISTS FORNECEDOR(
+ID int primary key,
+nome char(120) not null,
+cidade varchar(120) not null);
+
+
+CREATE TABLE IF NOT EXISTS PECA(
+id serial primary key,
+nome varchar(120),
+descricao text);
+
+CREATE TABLE IF NOT EXISTS VENDA(
+idFornecedor serial,
+idPeca int,
+data date not null,
+quantidade int not null,
+primary key (idPeca),
+constraint fk_idFornecedor foreign key (idFornecedor) references FORNECEDOR(id)
+);
+
+alter table fornecedor ADD COLUMN telefone varchar(12);
+alter table peca ADD COLUMN preco varchar(12);
+
+alter table fornecedor DROP cidade;
+\dt
+\d fornecedor
