@@ -44,7 +44,7 @@ CREATE TABLE emprestimo (
 \dt
 \d usuario
 -- adicionar campo telefone em usuario
-alter table usuario add telefone char(11) default 'Nenhum';
+alter table usuario add telefone char(15) default 'Nenhum';
 \d usuario
 --alterar coluna pra comportar 200 caracteres
 alter table livro alter COLUMN titulo type varchar(200);
@@ -62,7 +62,7 @@ alter table livro add CONSTRAINT uq_livro_titulo_editora UNIQUE (titulo, id_edit
 
 
 -- insert
-INSERT INTO usuario (id, nome, email) VALUES (0, 'david', 'djardim322@gmail.com');
+INSERT INTO usuario (id, nome, email, telefone) VALUES (0, 'david', 'djardim322@gmail.com', '(84) 9999-9999'), (1, 'joao', 'joao@gmail.com', '');
 insert into editora (id, nome) VALUES (0, 'Rocco');
 insert into genero (id, nome) VALUES (0, 'fantasia');
 insert into livro (id, titulo, quantidade_disponivel, id_editora, id_genero) VALUES (0, 'Harry Potter', 1, 0, 0);
