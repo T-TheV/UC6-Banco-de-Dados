@@ -62,7 +62,11 @@ alter table livro add CONSTRAINT uq_livro_titulo_editora UNIQUE (titulo, id_edit
 
 
 -- insert
-INSERT INTO usuario (id, nome, email, telefone) VALUES (0, 'david', 'djardim322@gmail.com', '(84) 9999-9999'), (1, 'joao', 'joao@gmail.com', '');
+--com telefone
+INSERT INTO usuario (id, nome, email, telefone) VALUES (0, 'david', 'david@gmail.com', '(84) 9999-9999'), (1, 'hugo', 'hugo@gmail.com', '(11) 8888-8888');
+--sem telefone
+INSERT INTO usuario (id, nome, email) VALUES (2, 'igor', 'igor@gmail.com'), (3, 'john doe', 'john@gmail.com');
+
 insert into editora (id, nome) VALUES (0, 'Rocco');
 insert into genero (id, nome) VALUES (0, 'fantasia');
 insert into livro (id, titulo, quantidade_disponivel, id_editora, id_genero) VALUES (0, 'Harry Potter', 1, 0, 0);
