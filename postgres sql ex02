@@ -1,0 +1,77 @@
+
+-- create
+CREATE TABLE if not exists usuario (
+  id serial PRIMARY KEY,
+  nome TEXT NOT NULL,
+  email varchar(120) UNIQUE NOT NULL,
+  data_cadastro timestamptz default current_timestamp
+
+);
+
+CREATE TABLE editora (
+  id serial PRIMARY KEY,
+  nome varchar(120) UNIQUE NOT NULL
+  
+);
+
+CREATE TABLE genero (
+  id serial PRIMARY KEY,
+  nome varchar(120) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE livro (
+  id serial PRIMARY KEY,
+  titulo varchar(120) NOT NULL,
+  quantidade_disponivel int NOT NULL check (quantidade_disponivel >= 0),
+  id_editora int NOT NULL,
+  id_genero int NOT NULL,
+  Constraint fk_livro_editora foreign key (id_editora) references editora(id) on delete cascade,
+  Constraint fk_livro_genero foreign key (id_genero) references genero(id) on delete cascade
+);
+
+CREATE TABLE emprestimo (
+  id serial PRIMARY KEY,
+  id_livro serial,
+  id_usuario serial,
+  data_inicio timestamptz default current_timestamp,
+  data_fim timestamptz not null,
+  Constraint fk_livro foreign key (id_livro) references livro(id),
+  constraint fk_usuario foreign key (id_usuario) references usuario(id),
+  CONSTRAINT check_data_inicio_fim CHECK (data_inicio < data_fim)
+);
+
+\dt
+\d usuario
+-- adicionar campo telefone em usuario
+alter table usuario add telefone char(11) default 'Nenhum';
+\d usuario
+--alterar coluna pra comportar 200 caracteres
+alter table livro alter COLUMN titulo type varchar(200);
+\d livro
+
+-- remova o campo data cadastro de usuarios pois não será usado
+\d usuario
+alter table usuario drop data_cadastro;
+\d usuario
+
+-- adicionar CONSTRAINT na tabala livro
+\d livro
+alter table livro add CONSTRAINT uq_livro_titulo_editora UNIQUE (titulo, id_editora);
+\d livro
+
+
+-- insert
+INSERT INTO usuario (id, nome, email) VALUES (0, 'david', 'djardim322@gmail.com');
+insert into editora (id, nome) VALUES (0, 'Rocco');
+insert into genero (id, nome) VALUES (0, 'fantasia');
+insert into livro (id, titulo, quantidade_disponivel, id_editora, id_genero) VALUES (0, 'Harry Potter', 1, 0, 0);
+insert into emprestimo(id,id_livro, id_usuario, data_inicio, data_fim) VALUES (0, 0, 0, current_timestamp, '2024-12-05 19:51:54');
+
+select current_timestamp;
+
+select * from usuario;
+select * from editora;
+select * from genero;
+select * from livro;
+select * from emprestimo;
