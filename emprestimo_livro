@@ -1,0 +1,111 @@
+begin;
+CREATE TABLE IF NOT EXISTS AUTOR (
+	id serial PRIMARY KEY,
+	Nome varchar(50) NOT NULL,
+	data_nascimento date,
+	constraint chk_data_nascimento check (data_nascimento <= CURRENT_DATE)
+) ;
+begin;
+CREATE TABLE IF NOT EXISTS LIVRO (
+	id serial PRIMARY KEY NOT NULL,
+	titulo varchar(50),
+	ano_publicacao integer,
+	id_autor integer,
+	CONSTRAINT fk_autor_livro FOREIGN KEY (id_autor) REFERENCES AUTOR (id),
+	CONSTRAINT chk_ano_publicacao check (ano_publicacao >= 1500 and ano_publicacao <= extract (year from current_date)) 
+);
+begin;
+CREATE TABLE IF NOT EXISTS USUARIO (
+	id serial PRIMARY KEY,
+	nome varchar(50) not null,
+	email varchar(50) UNIQUE,
+	data_adesao date,
+	CONSTRAINT chk_data_adesao check (data_adesao <=current_date)
+);
+begin;
+CREATE TABLE IF NOT EXISTS EMPRESTIMO (
+	id serial PRIMARY KEY,
+	id_livro integer,
+	id_usuario integer,
+	data_emprestimo date not null,
+	data_devolucao date not null,
+	CONSTRAINT chk_data_emprestimo CHECK (data_emprestimo <= data_devolucao),
+	CONSTRAINT fk_livro FOREIGN KEY (id_livro) REFERENCES LIVRO (id),
+	CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIO (id),
+	CONSTRAINT uq_livro_emprestimo unique (id_livro,data_emprestimo)
+);
+-- criando as inserções
+
+-- Inserindo dados na tabela AUTOR
+begin;
+INSERT INTO AUTOR (Nome, data_nascimento) VALUES
+('J.K. Rowling', '1965-07-31'),
+('George Orwell', '1903-06-25'),
+('Jane Austen', '1775-12-16'),
+('J.R.R. Tolkien', '1892-01-03'),
+('Mark Twain', '1835-11-30');
+
+-- Inserindo dados na tabela LIVRO
+begin;
+INSERT INTO LIVRO (titulo, ano_publicacao, id_autor) VALUES
+('Harry Potter e a Pedra Filosofal', 1997, 1),
+('1984', 1949, 2),
+('Orgulho e Preconceito', 1813, 3),
+('O Senhor dos Anéis: A Sociedade do Anel', 1954, 4),
+('As Aventuras de Tom Sawyer', 1876, 5);
+
+-- Inserindo dados na tabela USUARIO
+begin;
+INSERT INTO USUARIO (nome, email, data_adesao) VALUES
+('Lucas Silva', 'lucas.silva@example.com', '2023-01-10'),
+('Mariana Costa', 'mariana.costa@example.com', '2022-05-15'),
+('Carlos Souza', 'carlos.souza@example.com', '2024-06-01'),
+('Beatriz Oliveira', 'beatriz.oliveira@example.com', '2023-08-25'),
+('Eduardo Pereira', 'eduardo.pereira@example.com', '2024-01-05');
+
+-- Inserindo dados na tabela EMPRETIMO
+begin;
+INSERT INTO EMPRESTIMO (id_livro, id_usuario, data_emprestimo, data_devolucao) VALUES
+(1, 1, '2024-12-01', '2024-12-15'),
+(2, 2, '2024-12-05', '2024-12-20'),
+(3, 3, '2024-12-10', '2024-12-25'),
+(4, 4, '2024-12-12', '2024-12-26'),
+(5, 5, '2024-12-14', '2024-12-28');
+INSERT INTO EMPRESTIMO (id_livro, id_usuario, data_emprestimo, data_devolucao) VALUES
+(1,2, '2024-02-15', '2024-02-28')
+select * from autor;
+select * from livro;
+select * from emprestimo;
+select * from usuario;
+
+
+select livro.titulo, autor.nome 
+from autor 
+join livro on livro.id_autor = autor.id;
+
+select nome, email from usuario;
+
+select usuario.nome, livro.titulo, emprestimo.data_emprestimo, emprestimo.data_devolucao
+from emprestimo
+join livro on id_livro = livro.id
+join usuario on id_usuario = usuario.id;
+
+
+
+select livro.titulo, emprestimo.data_emprestimo
+from emprestimo
+join livro on id_livro = livro.id
+where data_devolucao = null;
+
+select usuario.nome, autor.nome
+from emprestimo
+join usuario on id_usuario = usuario.id
+join livro on id_livro = livro.id
+join autor on autor.id = livro.id_autor
+where autor.nome = 'J.K. Rowling';
+
+rollback;
+
+
+
+commit;
