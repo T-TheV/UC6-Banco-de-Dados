@@ -121,3 +121,28 @@ SELECT * FROM funcionario;
 SELECT * FROM venda;
 SELECT * FROM itens_venda;
 
+
+-- 1. listar total vendas por cada cliente
+select * from venda;
+select cliente.nome, count(venda.cliente_id) as total_vendas
+from venda
+join cliente on venda.id = cliente.id
+group by cliente.nome
+order by cliente.nome asc;
+
+-- 2. listar total vendas por funcionario
+
+select * from venda;
+select funcionario.nome, count(venda.funcionario_id) as total_venda
+from venda
+join funcionario on venda.id = funcionario.id
+group by funcionario.nome
+order by funcionario.nome asc;
+
+-- 3 liste a quantidade total de produtos vendidos por cada venda
+select * from itens_venda;
+select produto.id, count(itens_venda.produto_id) as total_produtos
+from itens_venda
+join produto.id on itens_venda.produto.id= produto.id
+group by produto.id
+order by produto.id;
