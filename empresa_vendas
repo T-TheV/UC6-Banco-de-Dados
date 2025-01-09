@@ -209,3 +209,18 @@ FROM itens_venda
 JOIN produto ON itens_venda.produto_id = produto.id
 GROUP BY produto.categoria
 ORDER BY total_produtos_vendidos DESC;
+
+-- add eletronicos
+select * from produto
+update produto 
+set categoria = 'Eletrônico'
+where id in (1,2)
+-- add cadeiras
+update produto 
+set categoria = 'Cadeiras'
+where id in (3)
+-- add acessorios
+update produto 
+set categoria = 'Acessórios'
+where id in (4,5)
+select * from produto;
