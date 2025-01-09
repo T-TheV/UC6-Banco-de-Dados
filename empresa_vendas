@@ -224,3 +224,91 @@ update produto
 set categoria = 'Acessórios'
 where id in (4,5)
 select * from produto;
+
+-- 13. Calcule o total arrecadado com vendas para cada cliente
+SELECT cliente.nome, SUM(venda.total_venda) AS total_arrecadado
+FROM venda
+JOIN cliente ON venda.cliente_id = cliente.id
+GROUP BY cliente.nome
+ORDER BY total_arrecadado DESC;
+
+-- 14. Calcule o preço médio dos produtos em estoque
+SELECT round(AVG(preco),2) AS preco_medio_estoque
+FROM produto
+WHERE estoque > 0;
+update produto
+set estoque = 25
+where id in (4,5)
+select * from produto;
+-- 15. Calcule o preço médio dos produtos vendidos por venda
+SELECT venda.id AS venda_id, ROUND(AVG(itens_venda.preco_unitario),2) AS preco_medio_produtos_vendidos
+FROM itens_venda
+JOIN venda ON itens_venda.venda_id = venda.id
+GROUP BY venda.id
+ORDER BY venda_id;
+
+-- 16. Calcule a média de salários dos funcionários
+SELECT ROUND(AVG(salario),2) AS salario_medio_funcionarios
+FROM funcionario;
+
+-- 17. Calcule a média do total das vendas por funcionário
+SELECT funcionario.nome, ROUND(AVG(venda.total_venda),2) AS media_vendas_funcionario
+FROM venda
+JOIN funcionario ON venda.funcionario_id = funcionario.id
+GROUP BY funcionario.nome
+ORDER BY media_vendas_funcionario DESC;
+
+-- 18. Conte quantas vendas foram realizadas por cliente
+SELECT cliente.nome, COUNT(venda.id) AS total_vendas_cliente
+FROM venda
+JOIN cliente ON venda.cliente_id = cliente.id
+GROUP BY cliente.nome
+ORDER BY total_vendas_cliente DESC;
+
+-- 19. Conte quantas vendas cada funcionário participou
+SELECT funcionario.nome, COUNT(venda.id) AS total_vendas_funcionario
+FROM venda
+JOIN funcionario ON venda.funcionario_id = funcionario.id
+GROUP BY funcionario.nome
+ORDER BY total_vendas_funcionario DESC;
+
+-- 20. Conte quantos produtos estão cadastrados no banco
+SELECT COUNT(id) AS total_produtos
+FROM produto;
+
+-- 21. Conte quantas vendas foram realizadas em cada dia
+SELECT data_venda, COUNT(id) AS total_vendas_dia
+FROM venda
+GROUP BY data_venda
+ORDER BY data_venda;
+
+-- 22. Liste os clientes que realizaram mais de 5 compras, ordenados pelo total de vendas
+SELECT cliente.nome, COUNT(venda.id) AS total_compras
+FROM venda
+JOIN cliente ON venda.cliente_id = cliente.id
+GROUP BY cliente.nome
+HAVING COUNT(venda.id) > 5
+ORDER BY total_compras DESC;
+
+-- 23. Liste os produtos mais vendidos (em quantidade) cujo total vendido ultrapassa 50 unidades
+SELECT produto.nome, SUM(itens_venda.quantidade_itens) AS total_vendido
+FROM itens_venda
+JOIN produto ON itens_venda.produto_id = produto.id
+GROUP BY produto.nome
+HAVING SUM(itens_venda.quantidade_itens) > 50
+ORDER BY total_vendido DESC;
+
+-- 24. Calcule a média de preço dos produtos vendidos em cada venda
+SELECT venda.id AS venda_id, AVG(itens_venda.preco_unitario) AS preco_medio_produtos
+FROM itens_venda
+JOIN venda ON itens_venda.venda_id = venda.id
+GROUP BY venda.id
+ORDER BY venda_id;
+
+-- 25. Liste os funcionários que participaram de vendas cujo total médio é superior a R$ 5.000,00
+SELECT funcionario.nome, AVG(venda.total_venda) AS media_vendas_funcionario
+FROM venda
+JOIN funcionario ON venda.funcionario_id = funcionario.id
+GROUP BY funcionario.nome
+HAVING AVG(venda.total_venda) > 5000
+ORDER BY media_vendas_funcionario DESC;
