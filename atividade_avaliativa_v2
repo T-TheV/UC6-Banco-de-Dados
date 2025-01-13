@@ -106,16 +106,18 @@ FROM categoria
 LEFT JOIN livro ON livro.id_categoria = categoria.id
 WHERE livro.disponivel = 'true'
 GROUP BY categoria.id
+having count(livro.id_categoria) > 5
 ORDER BY total_livros_disponiveis DESC;
 
+
 -- 16
-SELECT unidade.nome AS unidade_nome, COUNT(emprestimo.id) AS total_emprestimos_emaberto
+SELECT unidade.nome AS unidade_nome--, COUNT(emprestimo.id) AS total_emprestimos_emaberto
 FROM unidade
 LEFT JOIN livro ON livro.id_unidade = unidade.id
 LEFT JOIN emprestimo ON livro.id = emprestimo.id_livro
 WHERE emprestimo.devolvido = 'false' OR emprestimo.devolvido IS NULL
 GROUP BY unidade.id, unidade.nome
-ORDER BY total_emprestimos_emaberto DESC;
+--ORDER BY total_emprestimos_emaberto DESC;
 
 
 select * from autor;
