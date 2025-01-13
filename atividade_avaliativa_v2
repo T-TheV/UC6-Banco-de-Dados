@@ -1,0 +1,127 @@
+-- autor
+-- id nome nacionalidade data_nascimento
+
+-- bibliotecario
+-- id nome email telefone id_unidade data_contratacao
+
+-- categoria
+-- id nome descricao
+
+-- emprestimo
+-- id id_usuario id_livro data_emprestimo data_devolucao devolvido
+
+-- livro
+-- id titulo id_autor id_categoria ano_publicacao numero_paginas disponivel id_unidade
+
+-- unidade
+-- id nome endereco telefone horario_funcionamento horario_atendimento
+
+-- usuario 
+-- id nome email telefone endereco data_cadastro
+
+-- 1. 
+SELECT unidade.nome AS unidade_nome, COUNT(b.id) AS total_bibliotecarios
+FROM unidade
+LEFT JOIN bibliotecario b ON b.id_unidade = unidade.id
+GROUP BY unidade.id, unidade.nome;
+
+-- 2.
+SELECT unidade.nome AS unidade_nome, COUNT(livro.id) AS total_livros
+FROM unidade
+LEFT JOIN livro ON livro.id_unidade = unidade.id
+GROUP BY unidade.id, unidade.nome;
+
+-- 3.
+SELECT unidade.nome AS unidade_nome, COUNT(emprestimo.id) AS total_emprestimos
+FROM livro
+JOIN unidade ON livro.id_unidade = unidade.id
+LEFT JOIN emprestimo ON livro.id = emprestimo.id_livro
+GROUP BY unidade.id, unidade.nome
+ORDER BY unidade.nome;
+
+-- 5.
+SELECT COUNT(usuario.id) AS total_usuarios
+FROM usuario;
+
+-- 6.	
+SELECT COUNT(livro.id) AS total_livros
+FROM livro;
+
+-- 7.
+SELECT usuario.nome AS usuario_nome, COUNT(emprestimo.id) AS total_emprestimos
+FROM usuario
+LEFT JOIN emprestimo ON usuario.id = emprestimo.id_usuario
+GROUP BY usuario.id, usuario.nome
+ORDER BY total_emprestimos DESC;
+
+-- 8.
+SELECT EXTRACT(MONTH FROM emprestimo.data_emprestimo) AS mes, COUNT(emprestimo.id) AS total_emprestimos
+FROM emprestimo
+GROUP BY mes
+ORDER BY mes ASC, total_emprestimos DESC;
+
+-- 9.
+SELECT ROUND(AVG(numero_paginas),2)
+FROM livro
+
+-- 10.
+SELECT categoria.nome AS categoria, COUNT(livro.id) AS total_livros
+FROM categoria
+LEFT JOIN livro ON categoria.id = livro.id_categoria
+GROUP BY categoria.id
+ORDER BY total_livros DESC;
+
+-- 11.
+SELECT livro.titulo AS livro, autor.nome AS autor
+FROM livro
+JOIN autor ON livro.id_autor = autor.id
+WHERE autor.nacionalidade = 'Americana';
+
+-- 12.
+SELECT 
+    COUNT(emprestimo.id) AS total_livros_emprestados
+FROM livro
+JOIN unidade ON livro.id_unidade = unidade.id
+LEFT JOIN emprestimo ON livro.id = emprestimo.id_livro 
+WHERE emprestimo.devolvido = 'false' OR emprestimo.devolvido IS NULL;
+
+-- 13.
+SELECT unidade.nome, COUNT(livro.id) AS total_livros_cadastrados
+FROM unidade
+JOIN livro ON livro.id_unidade = unidade.id
+GROUP BY unidade.nome
+HAVING COUNT(livro.id) > 60
+ORDER BY unidade.nome;
+
+-- 14.
+SELECT autor.nome AS autor_nome, COUNT(livro.id) AS total_livros
+FROM autor
+LEFT JOIN livro ON livro.id_autor = autor.id
+GROUP BY autor.id
+ORDER BY total_livros DESC;
+
+-- 15.
+SELECT categoria.nome AS categoria_nome, COUNT(livro.id) AS total_livros_disponiveis
+FROM categoria
+LEFT JOIN livro ON livro.id_categoria = categoria.id
+WHERE livro.disponivel = 'true'
+GROUP BY categoria.id
+ORDER BY total_livros_disponiveis DESC;
+
+-- 16
+SELECT unidade.nome AS unidade_nome, COUNT(emprestimo.id) AS total_emprestimos_emaberto
+FROM unidade
+LEFT JOIN livro ON livro.id_unidade = unidade.id
+LEFT JOIN emprestimo ON livro.id = emprestimo.id_livro
+WHERE emprestimo.devolvido = 'false' OR emprestimo.devolvido IS NULL
+GROUP BY unidade.id, unidade.nome
+ORDER BY total_emprestimos_emaberto DESC;
+
+
+select * from autor;
+select * from bibliotecario;
+select * from categoria;
+select * from emprestimo;
+select * from livro;
+select * from unidade;
+select * from usuario;
